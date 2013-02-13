@@ -16,22 +16,25 @@ var Game = {
 
   start: function(){
     Snake.reset();
-    this.startListen();
-    this.interval = window.setInterval(this.draw, 250);
+    this.startListening();
+    this.startStepInterval();
   },
   
-  end: function(){
-    this.endListen();
-    window.clearInterval(this.interval);
+  stop: function(){
+    this.stopListening();
+    this.stopStepInterval();
     
     if(confirm("GAME OVER... Play again?")){
       this.start();
     }
   },
   
-  draw: function(){
+  step: function(){
     Snake.move();
-    
+    Game.draw();
+  },
+  
+  draw: function(){
     var buffer = "";
     for(var i = 0; i < Board.size[1]; i++){
       for(var j = 0; j < Board.size[0]; j++){
@@ -39,7 +42,7 @@ var Game = {
       };
       buffer += "\n";
     };
-  
+    
     this.output.innerHTML = buffer;
   },
   
@@ -60,12 +63,20 @@ var Game = {
     }
   },
   
-  startListen: function(){
+  startListening: function(){
     document.addEventListener('keydown', this.keydown, false);
   },
   
-  endListen: function(){
+  stopListening: function(){
     document.removeEventListener('keydown', this.keydown, false);
+  },
+  
+  startStepInterval: function(){
+    this.interval = window.setInterval(this.step, 250);
+  },
+  
+  stopStepInterval: function(){
+    window.clearInterval(this.interval);
   }
 }
 
@@ -92,9 +103,9 @@ var Snake = {
     this.coords = [[20,10], [20,11], [20,12], [20, 13], [20,14], [20, 15]];
   },
   
-  matchCoords: function(coords){
+  matchCoords: function(otherCoords){
     for (var i = 0; i < this.coords.length; i++) {
-      if(coords[0] === this.coords[i][0] && coords[1] === this.coords[i][1]){
+      if(otherCoords[0] === this.coords[i][0] && otherCoords[1] === this.coords[i][1]){
         return true;
       }
     };
@@ -109,13 +120,13 @@ var Snake = {
       this.coords.pop();
     }
     else {
-      Game.end();
+      Game.stop();
     }
   },
   
-  setDirection: function(direction){
-    if(direction[0] * -1 != this.direction[0] || direction[1] * -1 != this.direction[1]){
-      this.direction = direction;
+  setDirection: function(newDirection){
+    if(newDirection[0] * -1 != this.direction[0] || newDirection[1] * -1 != this.direction[1]){
+      this.direction = newDirection;
     }
   }
 };
