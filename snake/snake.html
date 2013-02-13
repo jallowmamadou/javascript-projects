@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Yay for Snake, says Jonathan!</title>
+</head>
+<body>
+
+<pre id="output"></pre>
+
+<script>
+
+var Game = {
+  output: document.getElementById("output"),
+  interval: null,
+
+  start: function(){
+    Snake.reset();
+    this.startListen();
+    this.interval = window.setInterval(this.draw, 250);
+  },
+  
+  end: function(){
+    this.endListen();
+    window.clearInterval(this.interval);
+    
+    if(confirm("GAME OVER... Play again?")){
+      this.start();
+    }
+  },
+  
+  draw: function(){
+    Snake.move();
+    
+    var buffer = "";
+    for(var i = 0; i < Board.size[1]; i++){
+      for(var j = 0; j < Board.size[0]; j++){
+        buffer += Snake.matchCoords([j, i]) ? "#" : ".";
+      };
+      buffer += "\n";
+    };
+  
+    this.output.innerHTML = buffer;
+  },
+  
+  keydown: function(event){
+    switch(event.keyCode){
+      case 37:
+        Snake.setDirection(Board.directions.left);
+        break;
+      case 38:
+        Snake.setDirection(Board.directions.up);
+        break;
+      case 39:
+        Snake.setDirection(Board.directions.right);
+        break;
+      case 40:
+        Snake.setDirection(Board.directions.down);
+        break;
+    }
+  },
+  
+  startListen: function(){
+    document.addEventListener('keydown', this.keydown, false);
+  },
+  
+  endListen: function(){
+    document.removeEventListener('keydown', this.keydown, false);
+  }
+}
+
+var Board = {
+  size: [40,20],
+  directions: {
+    up: [0, -1],
+    left: [-1, 0],
+    down: [0, 1],
+    right: [1, 0]
+  },
+  
+  validCoords: function(coords){
+    return (coords[0] >= 0 && coords[0] < this.size[0] && coords[1] >= 0 && coords[1] < this.size[1]);
+  }
+};
+
+var Snake = {
+  direction: null,
+  coords: null,
+  
+  reset: function(){
+    this.direction = Board.directions.up;
+    this.coords = [[20,10], [20,11], [20,12], [20, 13], [20,14], [20, 15]];
+  },
+  
+  matchCoords: function(coords){
+    for (var i = 0; i < this.coords.length; i++) {
+      if(coords[0] === this.coords[i][0] && coords[1] === this.coords[i][1]){
+        return true;
+      }
+    };
+    return false;
+  },
+  
+  move: function(){
+    var newCoords = [this.coords[0][0] + this.direction[0], this.coords[0][1] + this.direction[1]];
+    
+    if(Board.validCoords(newCoords) && !this.matchCoords(newCoords)){
+      Snake.coords.unshift(newCoords);
+      Snake.coords.pop();
+    }
+    else {
+      Game.end();
+    }
+  },
+  
+  setDirection: function(direction){
+    if(direction[0] * -1 != this.direction[0] || direction[1] * -1 != this.direction[1]){
+      this.direction = direction;
+    }
+  }
+};
+
+Game.start();
+
+</script>
+</body>
+</html>
