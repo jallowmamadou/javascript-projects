@@ -105,8 +105,8 @@ var Snake = {
     var newCoords = [this.coords[0][0] + this.direction[0], this.coords[0][1] + this.direction[1]];
     
     if(Board.validCoords(newCoords) && !this.matchCoords(newCoords)){
-      Snake.coords.unshift(newCoords);
-      Snake.coords.pop();
+      this.coords.unshift(newCoords);
+      this.coords.pop();
     }
     else {
       Game.end();
