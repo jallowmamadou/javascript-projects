@@ -7,29 +7,30 @@ function ShowTags(){
     },
     
     build: function(){
+      this.refresh();
+    },
+    
+    refresh: function(){
       this.populateTagList();
     },
     
     bind: function(){
-      // Learn click events.
-      $("#show-tags-button").click(this.toggleShowEvent);
+      // Click function gets "this" set to the button.
+      // However, we want "this" to be the ShowTags object.
+      $("#show-tags-button").click(this.toggleShowEvent.bind(this));
     },
     
     toggleShowEvent: function(event){
-      // Use classes to control visual changes on page. 
       $("#canvas").toggleClass("show-tags");
+      this.refresh();
     },
     
     populateTagList: function(){
       var ul = $("#show-tags");
       
-      // Clear out, before rebuild.
       ul.html("");
-
-      // Learn jQuery iteration helper and utility functions.
+      
       $.each(Data.tags, function(index, value){
-        
-        // Learn chaining jQuery methods
         $("<li><strong>" + value.user + "</strong></li>")
           .css({
             "top": value.y + "%",
@@ -51,39 +52,61 @@ function MakeTags(){
     },
     
     build: function(){
+      this.populateUserList();
     },
     
     bind: function(){
-      $("#make-tags-button").click(startTaggingEvent);
-      
-      // Listen for click on canvas
-      // Listen for click on user in tag list
+      $("#make-tags-button").click(this.startTaggingEvent);
+      $("#make-tags").click(this.photoClickedEvent);
+      $("#make-tags-list li").click(this.userClickedEvent);
     },
     
     startTaggingEvent: function(event){
-      $("#canvas").addClass("tagging-mode");
+      $("#canvas").toggleClass("make-tags");
     },
     
-    canvasClickedEvent: function(event){
+    photoClickedEvent: function(event){
+      if(event.target.id != "make-tags"){
+        return;
+      }
       
+      var canvas = $("#canvas");
+      var x = (parseFloat(event.pageX - canvas.offset().left) / canvas.width()) * 100;
+      var y = (parseFloat(event.pageY - canvas.offset().top) / canvas.height()) * 100;
+      
+      $("#make-tags-unit")
+        .data("x", x)
+        .data("y", y)
+        .css({
+          "left": x + "%",
+          "top": y + "%"
+        })
+        .show();
     },
     
-    tagUserSelected: function(event){
+    userClickedEvent: function(event){
+      var user = $(this).text();
+      var x = $("#make-tags-unit").data("x");
+      var y = $("#make-tags-unit").data("y");
       
+      Data.tags.push({
+        user: user,
+        x: x,
+        y: y
+      });
+      
+      $("#make-tags-unit").hide();
     },
     
     populateUserList: function(){
+      var html = "";
       
-    },
-    
-    showTagUnit: function(){
+      $.each(Data.users, function(index, value){
+        html += "<li>" + value + "</li>";
+      });
       
-    },
-    
-    hideTagUnit: function(){
-      
+      $("#make-tags-list").html(html);
     }
-    
   };
 };
 
