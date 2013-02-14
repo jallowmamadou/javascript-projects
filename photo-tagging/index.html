@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Photo Tagging for Great Fun</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  
+  <!-- 
+  
+  ASSIGNMENT
+  ==========
+  
+  Build a simple interface where you can show and tag users in a picture.
+  
+  New tags should be updated in a data array, as well as shown on the page. Tags should contain a user's name and x and y coordinates in percentages.
+  
+  The users should be picked from a prepopulated array.
+  
+  
+  INGREDIENTS:
+  * A picture
+  * A few buttons to toggle between "showing tags" and "make a new tag" modes
+  * A crosshair box to show where the user clicked to make a tag
+  * A list of users to pick to assign
+  * Labels positioned on the picture to display the tags
+  
+  
+  THINGS TO KNOW:
+  * CSS Absolute/Relative Positioning
+  * CSS Z-index order
+  * Adding elements to DOM
+  * Changing attributes of elements
+  * Dynamically adding classes to elements
+  * Dynamically adding css to elements
+  * Adding listeners to elements
+  * Getting mouse position out of fired event
+  * Using classes to switch presentation/behavior
+  * Live event binding using bubbling .live("click", ...) vs. .click(...)
+  
+  
+  EXTRA CREDIT:
+  * Make user list searchable
+  * Add multiple pictures to tag, with thumbnail navigation
+  * Add up/down arrows and return key support to select users from tag list
+  * Add left/right arrows to navigate through tumbnails
+  
+  -->
+  
+  <div id="canvas">
+
+    <div id="make-tags">
+      <div id="make-tags-unit">
+        <div id="make-tags-crosshair"></div>
+        <ul id="make-tags-list"></ul>
+      </div>
+    </div>
+
+    <ul id="show-tags"></ul>
+    
+    <div id="photo">
+      <img src="picture.jpg" width="600" height="400" alt="">
+    </div>
+    
+  </div>
+  
+  <div id="buttons">
+    <button id="show-tags-button">Show Tags</button>
+    <button id="make-tags-button">Make Tags</button>
+  </div>
+  
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="data.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
