@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Jonathan Says, Go Carrousel!</title>
+  <style>
+
+    body,
+    #carrousel, 
+    #carrousel ul,
+    #carrousel li {
+      margin: 0;
+      padding: 0;
+    }
+
+    #carrousel {
+      position: relative;
+      width: 500px;
+      height: 300px;
+      overflow: hidden;
+    }
+  
+    #carrousel ul {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      list-style: none;
+    }
+  
+    #carrousel li {
+      float: left;
+      width: 500px;
+      height: 100%;
+    }
+  
+    /* --- STYLING JUST FOR FUN --- */
+  
+    body {
+      font-family: sans-serif;
+    }
+  
+    #carrousel {
+      margin: 20px auto;
+      border: 10px solid black;
+    }
+  
+    #carrousel li {
+      background: blue;
+      color: white;
+      font-size: 60px;
+      font-weight: bold;
+      text-align: center;
+    }
+  
+    #carrousel li:nth-child(even){
+      background: green;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div id="carrousel">
+    <ul>
+      <li>One</li>
+      <li>Two</li>
+      <li>Three</li>
+      <li>Four</li>
+      <li>Five</li>
+    </ul>
+  </div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+
+var Carrousel = function(selector, delay){
+  var that = this;
+  
+  this.carrousel = $(selector);
+  this.ul = this.carrousel.find("> ul");
+  this.items = this.ul.find("> li");
+  this.itemWidth = $(this.items.get(0)).width();
+  this.currentIndex = 0;
+  this.timeoutID = null;
+  this.delay = delay;
+  
+  this.ul.css({width: (this.itemWidth * this.items.length) + "px"});
+
+  this.start = function(){
+    that.timeoutID = window.setTimeout(that.loop, that.delay);
+  };
+  
+  this.stop = function(){
+    clearInterval(that.timeoutID);
+  };
+  
+  this.loop = function(){
+    that.nextItem();
+    that.start();
+  }
+
+  this.nextItem = function(){
+    that.currentIndex++;
+    if(that.currentIndex == that.items.length){
+      that.currentIndex = 0;
+    }
+    that.move();
+  };
+
+  this.previousItem = function(){
+    that.currentIndex--;
+    if(that.currentIndex < 0){
+      that.currentIndex = that.items.length - 1;
+    }
+    that.move();
+  };
+  
+  this.move = function(){
+    var leftPos = -1 * that.currentIndex * that.itemWidth;
+    that.ul.animate({left: leftPos + "px"});
+  };
+  
+  this.start();
+};
+
+$(function(){
+  c = new Carrousel("#carrousel", 2000);
+});
+
+</script>
+</body>
+</html>
